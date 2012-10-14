@@ -50,8 +50,8 @@ d3.tsv("data.tsv", function(error, data) {
     d.sepalWidth = +d.sepalWidth;
   });
 
-  x.domain(d3.extent(data, function(d) { d.sepalWidth; })).nice();
-  y.domain(d3.extent(data, function(d) { d.sepalLength; })).nice();
+  x.domain(d3.extent(data, function(d) { return d.sepalWidth; })).nice();
+  y.domain(d3.extent(data, function(d) { return d.sepalLength; })).nice();
 
   svg.append("g")
       .attr("class", "x axis")
