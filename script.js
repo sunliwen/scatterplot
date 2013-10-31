@@ -30,29 +30,30 @@ function initTargetIdList() {
 
 }
 
+// chart margin
+var margin = {top: 20, right: 20, bottom: 30, left: 40},
+    //width = 960 - margin.left - margin.right,
+    width = 1920 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
+
+// scale of axises
+var x = d3.scale.linear()  // TODO, 13152 hours 548 days 18 months
+    .rangeRound([0, width]);
+
+var y = d3.scale.linear()
+    .rangeRound([height, 0]);
+
+// higher rating come with deeper color
+var color = d3.scale.ordinal()
+    .domain(["-1", "0", "1", "2"].reverse())
+    .range(colorbrewer.YlOrRd[4].reverse());
+
+// styling of axises
+var xAxis = d3.svg.axis().scale(x).orient("bottom");
+
+var yAxis = d3.svg.axis().scale(y).orient("left");
+
 function drawPlot(target_id) {
-  // chart margin
-  var margin = {top: 20, right: 20, bottom: 30, left: 40},
-      //width = 960 - margin.left - margin.right,
-      width = 1920 - margin.left - margin.right,
-      height = 500 - margin.top - margin.bottom;
-
-  // scale of axises
-  var x = d3.scale.linear()  // TODO, 13152 hours 548 days 18 months
-      .range([0, width]);
-
-  var y = d3.scale.linear()
-      .range([height, 0]);
-
-  // higher rating come with deeper color
-  var color = d3.scale.ordinal()
-      .domain(["-1", "0", "1", "2"].reverse())
-      .range(colorbrewer.YlOrRd[4].reverse());
-
-  // styling of axises
-  var xAxis = d3.svg.axis().scale(x).orient("bottom");
-
-  var yAxis = d3.svg.axis().scale(y).orient("left");
 
   // init svg into the given div
   if ($("#canvas").length!=0) {
@@ -81,11 +82,12 @@ function drawPlot(target_id) {
       d.x = +d.date_hour;
       d.y = +d.count;
       //d.rating = +d.rating;
+      console.log(d);
     });
 
     // Compute the scales’ domains.
-    x.domain(d3.extent(data, function(d) { return d.x; })).nice();
-    y.domain(d3.extent(data, function(d) { return d.y; })).nice();
+    x.domain(d3.extent(data, function(d) { return d.x; }));
+    y.domain(d3.extent(data, function(d) { return d.y; }));
 
     // Add the x-axis.
     svg.append("g")
