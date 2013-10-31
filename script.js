@@ -1,7 +1,7 @@
 
 function initTargetIdList() {
   $.ajax({
-    url: "/data/target_ids.json",
+    url: "data/target_ids.json",
   })
   .done(function(resp) {
     // a init dropdown list
