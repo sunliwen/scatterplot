@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
+
+<link href="//cdnjs.cloudflare.com/ajax/libs/select2/3.4.1/select2.min.css" rel="stylesheet" />
 <style>
 
 body {
@@ -20,15 +22,22 @@ body {
 </style>
 <body>
 
-<div id="div1" style="width:100%;border:2px solid red;">
+<input id="target_list" type="hidden" style="width:300px">
+
+<div id="plot_container" style="width:100%;border:2px solid red;">
 </div>
 
 <div id="div2" style="width:100%;min-height:100px;border:2px solid green;">
 </div>
 
-<script src="//d3js.org/d3.v3.min.js"></script>
-<script src="//d3js.org/colorbrewer.v1.min.js"></script>
-<script src="script.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/select2/3.4.1/select2.min.js"></script>
 
+<script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.3.9/d3.min.js"></script>
+<script src="libs/colorbrewer.v1.min.js"></script>
+<script src="script.js"></script>
+<script>
+initTargetIdList();
+</script>
 </body>
 </html>
