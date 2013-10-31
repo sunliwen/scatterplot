@@ -14,11 +14,10 @@ var y = d3.scale.linear()
     //.domain([0, 100])  // TODO, max of count of ratings
     .range([height, 0]);
 
-//var color = d3.scale.category10();
-
+// higher rating come with deeper color
 var color = d3.scale.ordinal()
-    .domain(["-1", "0", "1", "2"])  // color index
-    .range(colorbrewer.YlOrRd[4]);
+    .domain(["-1", "0", "1", "2"].reverse())
+    .range(colorbrewer.YlOrRd[4].reverse());
 
 // styling of axises
 var xAxis = d3.svg.axis().scale(x).orient("bottom");
@@ -88,4 +87,24 @@ d3.tsv("loose.tsv", function(data) {
       .attr("r", 2)
       .attr("cx", function(d) { return x(d.x); })
       .attr("cy", function(d) { return y(d.y); });
+
+  var legend = svg.selectAll(".legend")
+      .data(color.domain())
+    .enter().append("g")
+      .attr("class", "legend")
+      .attr("transform", function(d, i) { return "translate(0," + (+i + 1) * 20 + ")"; });
+
+  legend.append("rect")
+      .attr("x", width - 18)
+      .attr("width", 18)
+      .attr("height", 18)
+      .style("fill", color);
+
+  legend.append("text")
+      .attr("x", width - 24)
+      .attr("y", 9)
+      .attr("dy", ".35em")
+      .style("text-anchor", "end")
+      .text(function(d) { return d; });
+
 });
