@@ -65,13 +65,15 @@ d3.tsv("loose.tsv", function(data) {
 
   // Coerce the strings to numbers.
   data.forEach(function(d) {
-    d.x = +d.x;
-    d.y = +d.y;
+    console.log(d);
+    d.date_hour = +d.date_hour;
+    d.count = +d.count;
+    d.rating = +d.rating;
   });
 
   // Compute the scales’ domains.
-  x.domain(d3.extent(data, function(d) { return d.x; })).nice();
-  y.domain(d3.extent(data, function(d) { return d.y; })).nice();
+  x.domain(d3.extent(data, function(d) { return d.date_hour; })).nice();
+  y.domain(d3.extent(data, function(d) { return d.count; })).nice();
 
   // Add the x-axis.
   svg.append("g")
@@ -92,5 +94,5 @@ d3.tsv("loose.tsv", function(data) {
     .enter().append("path")
       .attr("class", "point")
       .attr("d", d3.svg.symbol().type("circle"))
-      .attr("transform", function(d) { return "translate(" + x(d.x) + "," + y(d.y) + ")"; });
+      .attr("transform", function(d) { return "translate(" + x(d.date_hour) + "," + y(d.count) + ")"; });
 });
