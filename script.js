@@ -1,7 +1,8 @@
 
 // chart margin
 var margin = {top: 20, right: 20, bottom: 30, left: 40},
-    width = 960 - margin.left - margin.right,
+    //width = 960 - margin.left - margin.right,
+    width = 1920 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
 
 // scale of axises
@@ -13,9 +14,11 @@ var y = d3.scale.linear()
     //.domain([0, 100])  // TODO, max of count of ratings
     .range([height, 0]);
 
-var z = d3.scale.category10();
+//var color = d3.scale.category10();
 
-var color = d3.scale.category10();
+var color = d3.scale.ordinal()
+    .domain(["-1", "0", "1", "2"])  // color index
+    .range(colorbrewer.YlOrRd[4]);
 
 // styling of axises
 var xAxis = d3.svg.axis().scale(x).orient("bottom");
@@ -36,63 +39,53 @@ svg.append("text")
     .attr("x", function () { return width/2; })
     .attr("y", function () { return height/2-5; });
 
-// // x-axis label
-// svg.append("g")
-//     .attr("class", "x axis")
-//     .attr("transform", "translate(0," + height + ")")
-//     .call(xAxis)
-//   .append("text")
-//     .attr("class", "label")
-//     .attr("x", width)
-//     .attr("y", -6)
-//     .style("text-anchor", "end")
-//     .text("Time span (hour)");
-
-
-// // y-axis label
-// svg.append("g")
-//     .attr("class", "y axis")
-//     .call(yAxis)
-//   .append("text")
-//     .attr("class", "label")
-//     .attr("transform", "rotate(-90)")
-//     .attr("y", 6)
-//     .attr("dy", ".71em")
-//     .style("text-anchor", "end")
-//     .text("Rating (s)");
-
 d3.tsv("loose.tsv", function(data) {
 
   // Coerce the strings to numbers.
   data.forEach(function(d) {
-    console.log(d);
-    d.date_hour = +d.date_hour;
-    d.count = +d.count;
-    d.rating = +d.rating;
+    //console.log(d);
+    d.x = +d.date_hour;
+    d.y = +d.count;
+    //d.rating = +d.rating;
   });
 
   // Compute the scales’ domains.
-  x.domain(d3.extent(data, function(d) { return d.date_hour; })).nice();
-  y.domain(d3.extent(data, function(d) { return d.count; })).nice();
+  x.domain(d3.extent(data, function(d) { return d.x; })).nice();
+  y.domain(d3.extent(data, function(d) { return d.y; })).nice();
 
   // Add the x-axis.
   svg.append("g")
       .attr("class", "x axis")
       .attr("transform", "translate(0," + height + ")")
-      .call(d3.svg.axis().scale(x).orient("bottom"));
+      .call(xAxis)
+    .append("text")
+      .attr("class", "label")
+      .attr("x", width)
+      .attr("y", -6)
+      .style("text-anchor", "end")
+      .text("Time span (hour)");;
 
   // Add the y-axis.
   svg.append("g")
       .attr("class", "y axis")
-      .call(d3.svg.axis().scale(y).orient("left"));
+      .call(yAxis)
+    .append("text")
+      .attr("class", "label")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 6)
+      .attr("dy", ".71em")
+      .style("text-anchor", "end")
+      .text("Rating (s)");
 
   svg.selectAll(".loading").remove();
 
   // Add the points!
-  svg.selectAll(".point")
+  svg.selectAll(".series")
       .data(data)
-    .enter().append("path")
-      .attr("class", "point")
-      .attr("d", d3.svg.symbol().type("circle"))
-      .attr("transform", function(d) { return "translate(" + x(d.date_hour) + "," + y(d.count) + ")"; });
+    .enter().append("circle")
+      .attr("class", "dot")
+      .style("fill", function(d) { return color(d.rating); })
+      .attr("r", 2)
+      .attr("cx", function(d) { return x(d.x); })
+      .attr("cy", function(d) { return y(d.y); });
 });
