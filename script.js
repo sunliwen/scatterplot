@@ -31,7 +31,7 @@ function initTargetIdList() {
         if ( -1 === $.inArray(e.added.id, target_plots)){
           console.log("create new plot");
           target_plots.push(e.added.id);
-          drawPlot(e.added.id);
+          drawPlot(e.added.id, e.added.text);
         }
       } else {
         console.log("!e.added");
@@ -69,7 +69,7 @@ function initCanvas(){
   }
 }
 
-function drawPlot(target_id_hash) {
+function drawPlot(target_id_hash, plot_title) {
   // init svg into the given div
   var canvas_id = "canvas-" + target_id_hash;
   $("#plot_container").append('<div id="'+canvas_id+'" class="js-canvas"></div>');
@@ -91,11 +91,8 @@ function drawPlot(target_id_hash) {
 
     // Coerce the strings to numbers.
     data.forEach(function(d) {
-      //console.log(d);
       d.x = +d.date_hour;
       d.y = +d.count;
-      //d.rating = +d.rating;
-      //console.log(d);
     });
 
     // Compute the scales’ domains.
@@ -125,6 +122,14 @@ function drawPlot(target_id_hash) {
         .attr("dy", ".71em")
         .style("text-anchor", "end")
         .text("Rating (s)");
+
+    // Add title 
+    svg.append("text")
+        .attr("x", (width / 2))             
+        .attr("y", 0 - (margin.top / 2))
+        .attr("text-anchor", "middle")  
+        .style("font-size", "12px") 
+        .text(plot_title);
 
     svg.selectAll(".loading").remove();
 
