@@ -70,6 +70,9 @@ function initCanvas(){
 }
 
 function drawPlot(target_id_hash, plot_title) {
+
+  sample_start = +new Date();
+
   // init svg into the given div
   var canvas_id = "canvas-" + target_id_hash;
   $("#plot_container").append('<div id="'+canvas_id+'" class="js-canvas"></div>');
@@ -123,14 +126,6 @@ function drawPlot(target_id_hash, plot_title) {
         .style("text-anchor", "end")
         .text("Rating (s)");
 
-    // Add title 
-    svg.append("text")
-        .attr("x", (width / 2))             
-        .attr("y", 0 - (margin.top / 2))
-        .attr("text-anchor", "middle")  
-        .style("font-size", "12px") 
-        .text(plot_title);
-
     svg.selectAll(".loading").remove();
 
     // Add the points!
@@ -162,6 +157,17 @@ function drawPlot(target_id_hash, plot_title) {
         .style("text-anchor", "end")
         .text(function(d) { return d; });
 
+    sample_end = +new Date();
+    sample_time = sample_end-sample_start;
+
+
+    // Add title
+    svg.append("text")
+        .attr("x", (width / 2))
+        .attr("y", 0 - (margin.top / 2))
+        .attr("text-anchor", "middle")
+        .style("font-size", "12px")
+        .text(plot_title + " - " + sample_time + "ms");
   });
 
 }
